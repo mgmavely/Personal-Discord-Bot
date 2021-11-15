@@ -1,0 +1,5 @@
+My discord ID for test server:
+  "182655526302253058"
+
+Format for mentioning user via userID:
+  message.channel.send('<@!'+userId+'>')
