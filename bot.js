@@ -42,8 +42,12 @@ client.on("messageCreate",  message => {
   if (command === "ttt") {
     if (args.length !== 1) {
       message.reply("Invalid format.  Please \@ one user to play tic-tac-toe with them!")
+    } else if (message.mentions.users.first() === undefined ) {
+      message.reply("Invalid user.  Please \@ a valid user to play tic-tac-toe with them!")
     } else {
-      games.push(new ttt(message.author.id, 123));
+      games.push(new ttt(message.author.id, message.mentions.users.first().id));
+      message.channel.send('<@!'+ message.author.id+'>\'s Turn. ')
+      message.channel.send(games[0].returnBoard());
     }
   }
 
