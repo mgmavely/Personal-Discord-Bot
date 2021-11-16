@@ -34,8 +34,6 @@ client.on("messageCreate",  message => {
 
   const args = message.content.slice(prefix.length).trim().split(/ +/);
   const command = args.shift().toLowerCase();
-  console.log("Args: " + args.length);
-  console.log("Command: " + command);
 
   if (command === "ratio") {
           if (message.mentions.repliedUser !== null) {
@@ -49,7 +47,6 @@ client.on("messageCreate",  message => {
         }
 
   if (command === "ttt") {
-    console.log(args[0]);
     if (args.length !== 1) {
       message.reply("Invalid format.  Please use command |h for command information!")
     } else if (message.mentions.users.first() !== undefined ) {
@@ -81,6 +78,19 @@ client.on("messageCreate",  message => {
         // Create embed and @ user as message in channel
         message.channel.send('<@!' + games[game_id].currentPlayer() + '>\'s Turn. ');
         message.channel.send(games[game_id].returnBoard());
+      }
+    }  else if (args[0] === "ff") {
+      if (players[message.author.id] === undefined) {
+        message.reply(`You are currently not playing a game.  To start a game, use the following command: \`${prefix}ttt @<user>\``);
+      } else {
+        let game_id = players[message.author.id];
+        // Create embed and @ user as message in channel
+        message.channel.send(`<@!${games[game_id].player1}> <@!${games[game_id].player2}>`);
+        message.channel.send(`<@!${message.author.id}> has forfeit the game`);
+        message.channel.send(games[game_id].returnBoard());
+        delete players[(games[game_id].player1)];
+        delete players[(games[game_id].player2)];
+        delete games[game_id];
       }
     } else {
       // Check that message.author.id === ...currentPlayer() - handle logic accordingly
