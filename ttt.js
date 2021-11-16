@@ -2,6 +2,7 @@ module.exports = class TicTacToe {
   constructor(p1, p2) {
     this.player1 = p1;
     this.player2 = p2;
+    this.game_id = parseInt(p1.toString() + p2.toString())
     this.board = [":zero:",":one:",":two:",":three:",":four:",":five:",":six:",":seven:",":eight:"];
     this.remaining_moves = 9;
     this.turn = 1;
@@ -19,6 +20,7 @@ module.exports = class TicTacToe {
       if (this.board[play] !== ":x:" && this.board[play] !== ":o:") {
         if (this.turn === 1) {
           this.board[play] = ":x:";
+          this.remaining_moves -= 1;
           if (this.isWinner()) {
             this.game_over = true;
             return `<@!${this.winner}> Wins!`
@@ -30,6 +32,7 @@ module.exports = class TicTacToe {
           return "Player 2's Turn."
         } else {
           this.board[play] = ":o:";
+          this.remaining_moves -= 1;
           if (this.isWinner()) {
             this.game_over = true;
             return `<@!${this.winner}> Wins!`

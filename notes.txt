@@ -3,3 +3,6 @@ My discord ID for test server:
 
 Format for mentioning user via userID:
   message.channel.send('<@!'+userId+'>')
+
+How to check for user roles:
+  message.member.roles.cache.some(r => r.name === "Mod")
