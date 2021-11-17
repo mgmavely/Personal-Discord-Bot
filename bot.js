@@ -57,8 +57,8 @@ client.on("messageCreate",  message => {
         players[p2] = game_id;
 
         //send embed
-        const exampleEmbed = eb.createEmbed(games[game_id]);
-        message.channel.send({ embeds: [exampleEmbed] });
+        const tttEmbed = eb.createEmbed(games[game_id]);
+        message.channel.send({ embeds: [tttEmbed] });
         // message.channel.send('<@!' + games[game_id].currentPlayer() + '>\'s Turn. ');
         // message.channel.send(games[game_id].returnBoard());
       }
@@ -68,18 +68,20 @@ client.on("messageCreate",  message => {
       } else {
         let game_id = players[message.author.id];
         // Create embed and @ user as message in channel
-        message.channel.send('<@!' + games[game_id].currentPlayer() + '>\'s Turn. ');
-        message.channel.send(games[game_id].returnBoard());
+        const tttEmbed = eb.createEmbed(games[game_id]);
+        message.channel.send({ embeds: [tttEmbed] });
       }
     }  else if (args[0] === "ff") {
       if (players[message.author.id] === undefined) {
         message.reply(`You are currently not playing a game.  To start a game, use the following command: \`${prefix}ttt @<user>\``);
       } else {
         let game_id = players[message.author.id];
+        games[game_id].message = `<@!${message.author.id}> has forfeit the game`
+        games[game_id].turn = (games[game_id].turn === 1) ? 2 : 1;
+        games[game_id].playTicTacToe(args[0]);
         // Create embed and @ user as message in channel
-        message.channel.send(`<@!${games[game_id].player1}> <@!${games[game_id].player2}>`);
-        message.channel.send(`<@!${message.author.id}> has forfeit the game`);
-        message.channel.send(games[game_id].returnBoard());
+        const tttEmbed = eb.createEmbed(games[game_id]);
+        message.channel.send({ embeds: [tttEmbed] });
         delete players[(games[game_id].player1)];
         delete players[(games[game_id].player2)];
         delete games[game_id];
@@ -90,21 +92,22 @@ client.on("messageCreate",  message => {
       // Follow with logic to handle if game.is_ended is true
       let game_id = players[message.author.id];
 
-      if (message.author.id !== games[game_id].currentPlayer()) {
+      if (players[message.author.id] === undefined) {
+        message.reply(`You are currently not playing a game.  To start a game, use the following command: \`${prefix}ttt @<user>\``);
+      } else if (message.author.id !== games[game_id].currentPlayer()) {
         message.reply(`It's not your turn right now.  Use \`${prefix}ttt board\` for game information.`)
       } else {
-        msgString = games[game_id].playTicTacToe(args[0]);
+        games[game_id].playTicTacToe(args[0]);
         if (games[game_id].game_over === true) {
-          message.channel.send('<@!' + games[game_id].player1 + '>' + '<@!' + games[game_id].player2 + '>');
-          message.channel.send(msgString);
-          message.channel.send(games[game_id].returnBoard());
+          const tttEmbed = eb.createEmbed(games[game_id]);
+          message.channel.send({ embeds: [tttEmbed] });
           delete players[(games[game_id].player1)];
           delete players[(games[game_id].player2)];
           delete games[game_id];
         } else {
           //message.channel.send(games[game_id].playTicTacToe(args[0]));
-          message.channel.send('<@!' + games[game_id].currentPlayer() + '>\'s Turn. ');
-          message.channel.send(games[game_id].returnBoard());
+          const tttEmbed = eb.createEmbed(games[game_id]);
+          message.channel.send({ embeds: [tttEmbed] });
         }
       }      
     }

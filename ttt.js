@@ -9,43 +9,53 @@ module.exports = class TicTacToe {
     this.game_over = false;
     this.winner;
     this.color = "#" + Math.floor(Math.random()*16777215).toString(16);
+    this.message = "";
+    this.ff = false;
   }
 
   playTicTacToe(play) {
+    if (play === "ff") {
+      this.ff = true;
+      this.game_over = true;
+      this.winner = this.currentPlayer();
+      return;
+    }
     play = parseInt(play);
     if (Number.isNaN(play)) {
-      return `Invalid play. Player ${this.turn}'s turn.`
+      this.message = `Invalid input.`
     } else if (play < 0 || play > 8) {
-      return `Input out of range (0-8). Player ${this.turn}'s turn.`
+      this.message =  `Input out of range (0-8).`
     } else {
       if (this.board[play] !== ":x:" && this.board[play] !== ":o:") {
         if (this.turn === 1) {
           this.board[play] = ":x:";
           this.remaining_moves -= 1;
+          this.message = "";
           if (this.isWinner()) {
             this.game_over = true;
-            return `<@!${this.winner}> Wins!`
+            this.message = ""
           } else if (this.remaining_moves === 0) {
             this.game_over = true;
-            return `It's a draw!`;
+            this.message = "";
           }
           this.turn = 2;
-          return "Player 2's Turn."
+          this.message = "";
         } else {
           this.board[play] = ":o:";
           this.remaining_moves -= 1;
+          this.message = "";
           if (this.isWinner()) {
             this.game_over = true;
-            return `<@!${this.winner}> Wins!`
+            this.message = ""
           } else if (this.remaining_moves === 0) {
             this.game_over = true;
-            return `It's a draw!`;
+            this.message = "";
           }
           this.turn = 1;
-          return "Player 1's Turn."
+          this.message = "";
         }
       } else {
-        return `Space is occupied. Player ${this.turn}'s turn.`
+        this.message =  `Space is occupied.`;
       }
     }
   }
