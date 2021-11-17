@@ -24,10 +24,8 @@ createEmbed = (game) => {
     inline: false
   });
 
- if (msg !== "" && game.ff !== true) {
-    fieldsArray.push({name:"Error:", value: msg, inline: false});
-  } else if (game.ff) {
-    fieldsArray.push({name:"Message:", value: msg, inline: false});
+ if (msg !== "") {
+    fieldsArray.push(msg);
   }
 
   const exampleEmbed = {

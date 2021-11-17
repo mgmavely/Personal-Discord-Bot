@@ -10,21 +10,21 @@ module.exports = class TicTacToe {
     this.winner;
     this.color = "#" + Math.floor(Math.random()*16777215).toString(16);
     this.message = "";
-    this.ff = false;
   }
 
   playTicTacToe(play) {
     if (play === "ff") {
-      this.ff = true;
       this.game_over = true;
       this.winner = this.currentPlayer();
+      this.message = {name: "Message:", value: `<@!${this.notCurrentPlayer()}> has forfeit the game!`, inline:false}
       return;
     }
     play = parseInt(play);
     if (Number.isNaN(play)) {
-      this.message = `Invalid input.`
+      play = Math.floor(play);
+      this.message = {name: "Error:", value: `Invalid Input.`}
     } else if (play < 0 || play > 8) {
-      this.message =  `Input out of range (0-8).`
+      this.message =  {name: "Error:", value: `Input out of Range (0-8).`, inline: false}
     } else {
       if (this.board[play] !== ":x:" && this.board[play] !== ":o:") {
         if (this.turn === 1) {
@@ -55,7 +55,7 @@ module.exports = class TicTacToe {
           this.message = "";
         }
       } else {
-        this.message =  `Space is occupied.`;
+        this.message =  {name: "Error:", value: `Space is Occupied.`, inline: false};
       }
     }
   }
@@ -118,6 +118,14 @@ module.exports = class TicTacToe {
       return this.player1
     } else {
       return this.player2
+    }
+  }
+
+  notCurrentPlayer() {
+    if (this.turn === 1) {
+      return this.player2
+    } else {
+      return this.player1
     }
   }
 }

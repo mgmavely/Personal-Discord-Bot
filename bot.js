@@ -38,7 +38,7 @@ client.on("messageCreate",  message => {
 
   if (command === "ttt") {
     if (args.length !== 1) {
-      message.reply(`Invalid format.  Please use command \`${prefix}h\` for command information!`)
+      message.reply(`Invalid format.  Please use command \`${prefix} h\` for command information!`)
     } else if (message.mentions.users.first() !== undefined ) {
       if (players[message.author.id] !== undefined) {
         message.reply(`You are currently in a game.  You may not start another game until your current game is finished.`)
@@ -59,8 +59,6 @@ client.on("messageCreate",  message => {
         //send embed
         const tttEmbed = eb.createEmbed(games[game_id]);
         message.channel.send({ embeds: [tttEmbed] });
-        // message.channel.send('<@!' + games[game_id].currentPlayer() + '>\'s Turn. ');
-        // message.channel.send(games[game_id].returnBoard());
       }
     } else if (args[0] === "board") {
       if (players[message.author.id] === undefined) {
@@ -77,7 +75,7 @@ client.on("messageCreate",  message => {
       } else {
         let game_id = players[message.author.id];
         games[game_id].message = `<@!${message.author.id}> has forfeit the game`
-        games[game_id].turn = (games[game_id].turn === 1) ? 2 : 1;
+        games[game_id].turn = (message.author.id === games[game_id].player1) ? 2 : 1;
         games[game_id].playTicTacToe(args[0]);
         // Create embed and @ user as message in channel
         const tttEmbed = eb.createEmbed(games[game_id]);
@@ -86,6 +84,8 @@ client.on("messageCreate",  message => {
         delete players[(games[game_id].player2)];
         delete games[game_id];
       }
+    } else if (args[0] === "h") {
+      message.channel.send(`${message.author}!\n\n**Commands:**\n**${prefix}ttt @<user>** : Starts game with @<user>.  Cannot be initiated if either users are currently in a game already.\n\n**${prefix}ttt (0-8)**  : Plays turn of TicTacToe if you are in a game, and it is currently your turn.\n\n**${prefix}ttt board** : Displays the current state of your game if you are currently in a game.\n\n**${prefix} ff** : Ends game if you are currently in one.\n\n**${prefix} h** : Information about ${prefix}ttt commands.`)
     } else {
       // Check that message.author.id === ...currentPlayer() - handle logic accordingly
       // Play turn with user argument.  Create embed and send
