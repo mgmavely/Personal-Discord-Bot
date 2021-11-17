@@ -1,8 +1,9 @@
 const Database = require("@replit/database")
-const { Client, Intents } = require('discord.js');
+const { Client, Intents, MessageEmbed } = require('discord.js');
 const client = new Client({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES] });
 
 let ttt = require("./ttt.js");
+let eb = require("./embed.js");
 //let player = require("./player.js");
 
 const token = process.env['token'];
@@ -20,17 +21,6 @@ client.on('ready', () => {
 
 client.on("messageCreate",  message => {
   if (!message.content.startsWith(prefix) || message.author.bot) return;
-  // if (Object.keys(games).length !== 0 && message.author.id !== `908744402439135323`) {
-  //   let game_id = players[message.author.id];
-  //   if (games[game_id].game_over === true) {
-  //     delete players[(games[game_id].player1)];
-  //     delete players[(games[game_id].player2)];
-  //     delete games[game_id];
-  //   } else {
-  //     message.channel.send(games[game_id].playTicTacToe(message))
-  //     message.channel.send(games[game_id].returnBoard())
-  //   }    
-  // }  
 
   const args = message.content.slice(prefix.length).trim().split(/ +/);
   const command = args.shift().toLowerCase();
@@ -48,7 +38,7 @@ client.on("messageCreate",  message => {
 
   if (command === "ttt") {
     if (args.length !== 1) {
-      message.reply("Invalid format.  Please use command |h for command information!")
+      message.reply(`Invalid format.  Please use command \`${prefix}h\` for command information!`)
     } else if (message.mentions.users.first() !== undefined ) {
       if (players[message.author.id] !== undefined) {
         message.reply(`You are currently in a game.  You may not start another game until your current game is finished.`)
@@ -67,8 +57,10 @@ client.on("messageCreate",  message => {
         players[p2] = game_id;
 
         //send embed
-        message.channel.send('<@!' + games[game_id].currentPlayer() + '>\'s Turn. ');
-        message.channel.send(games[game_id].returnBoard());
+        const exampleEmbed = eb.createEmbed(games[game_id]);
+        message.channel.send({ embeds: [exampleEmbed] });
+        // message.channel.send('<@!' + games[game_id].currentPlayer() + '>\'s Turn. ');
+        // message.channel.send(games[game_id].returnBoard());
       }
     } else if (args[0] === "board") {
       if (players[message.author.id] === undefined) {
