@@ -2,10 +2,12 @@ const Database = require("@replit/database")
 const { Client, Intents, MessageEmbed } = require('discord.js');
 const client = new Client({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES] });
 
+
 let ttt = require("./ttt.js");
 let eb = require("./embed.js");
+let db = require("./database.js");
+const matchHistory = new db()
 //let player = require("./player.js");
-
 const token = process.env['token'];
 
 //Hash tables for players and games
@@ -77,6 +79,7 @@ client.on("messageCreate",  message => {
         games[game_id].message = `<@!${message.author.id}> has forfeit the game`
         games[game_id].turn = (message.author.id === games[game_id].player1) ? 2 : 1;
         games[game_id].playTicTacToe(args[0]);
+
         // Create embed and @ user as message in channel
         const tttEmbed = eb.createEmbed(games[game_id]);
         message.channel.send({ embeds: [tttEmbed] });
@@ -86,6 +89,20 @@ client.on("messageCreate",  message => {
       }
     } else if (args[0] === "h") {
       message.channel.send(`${message.author}!\n\n**Commands:**\n**${prefix}ttt @<user>** : Starts game with @<user>.  Cannot be initiated if either users are currently in a game already.\n\n**${prefix}ttt (0-8)**  : Plays turn of TicTacToe if you are in a game, and it is currently your turn.\n\n**${prefix}ttt board** : Displays the current state of your game if you are currently in a game.\n\n**${prefix} ff** : Ends game if you are currently in one.\n\n**${prefix} h** : Information about ${prefix}ttt commands.`)
+    } else if (args[0] === "history") {
+      matchHistory.getHistory(message.author.id, message.channel);
+    } else if (args[0] === "addw") {
+      matchHistory.addWin(message.author.id);
+    } else if (args[0] === "subw") {
+      matchHistory.subWin(message.author.id);
+    } else if (args[0] === "addl") {
+      matchHistory.addLoss(message.author.id);
+    } else if (args[0] === "subl") {
+      matchHistory.subLoss(message.author.id);
+    } else if (args[0] === "addd") {
+      matchHistory.addDraw(message.author.id);
+    } else if (args[0] === "subd") {
+      matchHistory.subDraw(message.author.id);
     } else {
       // Check that message.author.id === ...currentPlayer() - handle logic accordingly
       // Play turn with user argument.  Create embed and send
@@ -105,7 +122,6 @@ client.on("messageCreate",  message => {
           delete players[(games[game_id].player2)];
           delete games[game_id];
         } else {
-          //message.channel.send(games[game_id].playTicTacToe(args[0]));
           const tttEmbed = eb.createEmbed(games[game_id]);
           message.channel.send({ embeds: [tttEmbed] });
         }
