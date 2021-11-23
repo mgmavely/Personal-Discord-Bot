@@ -8,6 +8,7 @@ module.exports = class TicTacToe {
     this.turn = 1;
     this.game_over = false;
     this.winner;
+    this.loser;
     this.color = "#" + Math.floor(Math.random()*16777215).toString(16);
     this.message = "";
   }
@@ -16,13 +17,14 @@ module.exports = class TicTacToe {
     if (play === "ff") {
       this.game_over = true;
       this.winner = this.currentPlayer();
+      this.loser = this.notCurrentPlayer();
       this.message = {name: "Message:", value: `<@!${this.notCurrentPlayer()}> has forfeit the game!`, inline:false}
       return;
     }
     play = parseInt(play);
     if (Number.isNaN(play)) {
       play = Math.floor(play);
-      this.message = {name: "Error:", value: `Invalid Input.`}
+      this.message = {name: "Error:", value: `Invalid Input.`, inline: false}
     } else if (play < 0 || play > 8) {
       this.message =  {name: "Error:", value: `Input out of Range (0-8).`, inline: false}
     } else {
@@ -80,34 +82,42 @@ module.exports = class TicTacToe {
     if (this.board[0] === this.board[1] && this.board[1] === this.board[2]) {
       this.game_over = true;
       this.winner = (this.board[0] === ":x:")? this.player1 : this.player2;
+      this.loser = (this.winner === this.player1)? this.player2: this.player1;
       return true;
     } else if (this.board[3] === this.board[4] && this.board[4] === this.board[5]) {
       this.game_over = true;
       this.winner = (this.board[3] === ":x:")? this.player1 : this.player2;
+      this.loser = (this.winner === this.player1)? this.player2: this.player1;
       return true;
     } else if (this.board[6] === this.board[7] && this.board[7] === this.board[8]) {
       this.game_over = true;
       this.winner = (this.board[6] === ":x:")? this.player1 : this.player2;
+      this.loser = (this.winner === this.player1)? this.player2: this.player1;
       return true;
     } else if (this.board[0] === this.board[3] && this.board[3] === this.board[6]) {
       this.game_over = true;
       this.winner = (this.board[0] === ":x:")? this.player1 : this.player2;
+      this.loser = (this.winner === this.player1)? this.player2: this.player1;
       return true;
     } else if (this.board[1] === this.board[4] && this.board[4] === this.board[7]) {
       this.game_over = true;
       this.winner = (this.board[1] === ":x:")? this.player1 : this.player2;
+      this.loser = (this.winner === this.player1)? this.player2: this.player1;
       return true;
     } else if (this.board[2] === this.board[5] && this.board[5] === this.board[8]) {
       this.game_over = true;
       this.winner = (this.board[2] === ":x:")? this.player1 : this.player2;
+      this.loser = (this.winner === this.player1)? this.player2: this.player1;
       return true;
     } else if (this.board[0] === this.board[4] && this.board[4] === this.board[8]) {
       this.game_over = true;
       this.winner = (this.board[0] === ":x:")? this.player1 : this.player2;
+      this.loser = (this.winner === this.player1)? this.player2: this.player1;
       return true;
     } else if (this.board[2] === this.board[4] && this.board[4] === this.board[6]) {
       this.game_over = true;
       this.winner = (this.board[2] === ":x:")? this.player1 : this.player2;
+      this.loser = (this.winner === this.player1)? this.player2: this.player1;
       return true;
     } else {
       return false;
